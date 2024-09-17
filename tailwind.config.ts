@@ -6,7 +6,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: ["class"],
+  darkMode: "media",
   theme: {
     container: {
       center: true,
@@ -88,7 +88,8 @@ const config: Config = {
         sidebar: "calc(100vh - 64px)",
       },
       fontFamily: {
-        satoshi: ["var(--font-satoshi)"],
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
       },
     },
   },

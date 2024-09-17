@@ -2,7 +2,7 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
 export const config = {
-  matcher: ["/courses/:path*", "/employee/:path*", "/admin/:path*", "/admin"],
+  matcher: ["/employee/:path*", "/admin/:path*", "/landing"],
 };
 
 export default withAuth(async (req) => {
@@ -10,6 +10,15 @@ export default withAuth(async (req) => {
 
   const token = req.nextauth.token;
   const url = new URL(req.url);
+
+  if(!token && url.pathname.startsWith('/landing')){
+    return NextResponse.redirect(new URL("/signin", req.url));
+  } 
+
+  if(token && url.pathname.startsWith('/landing')){
+    return NextResponse.next();
+  }
+
   if (!token) {
     return NextResponse.redirect(new URL("/invalidsession", req.url));
   }

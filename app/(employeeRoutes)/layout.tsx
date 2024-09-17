@@ -1,5 +1,6 @@
-// import { Appbar } from '@/components/Appbar';
-import React from 'react';
+import { Appbar } from "@/components/common/AppBar";
+import React from "react";
+import { Providers } from "../provider";
 
 interface Props {
   children: React.ReactNode;
@@ -7,9 +8,11 @@ interface Props {
 
 export default (props: Props) => {
   return (
-    <div className="flex min-h-screen w-full">
-      {/* <Appbar /> */}
-      <div className="wrapper w-full">{props.children}</div>
+    <div className="min-h-screen w-full">
+      <Providers>
+        <Appbar />
+        <div className="wrapper w-full p-3">{props.children}</div>
+      </Providers>
     </div>
   );
 };

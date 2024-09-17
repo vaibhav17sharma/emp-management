@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
 const emailDomains = [
   'gmail.com',
   'yahoo.com',
@@ -112,7 +112,7 @@ const Signin = () => {
 
     toast.dismiss(loadId);
     if (!res?.error) {
-      router.push('/');
+      router.push('/landing');
       toast.success('Signed In');
     } else {
       toast.error('oops something went wrong..!');

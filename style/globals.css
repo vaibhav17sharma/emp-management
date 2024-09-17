@@ -5,7 +5,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: '__Inter_36bd41', '__Inter_Fallback_36bd41';
+  font-family: var(--font-geist-sans);
 }
 
 @layer utilities {

@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
-import "/style/globals.css";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
-import { Inter } from "next/font/google";
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
+import type { Metadata } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
+import "/style/globals.css";
+
 
 export const metadata: Metadata = {
   title: "Employee Management",
@@ -18,8 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn("min-h-screen bg-background antialiased", inter.className)}>
+        className={cn("min-h-screen bg-background antialiased", GeistMono.variable, GeistSans.variable)}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

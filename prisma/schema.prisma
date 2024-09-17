@@ -8,12 +8,19 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
-  name     String?
-  email    String?   @unique
-  password String?
-  token    String?
-  sessions Session[]
+  id         String           @id @default(cuid())
+  name       String?
+  email      String           @unique
+  password   String
+  token      String?
+  sessions   Session[]
+  role       UserRole         @default(EMPLOYEE)
+  profile    EmployeeProfile?
+  attendance Attendance[]
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@index([email])
 }
 
 model Session {
@@ -22,4 +29,58 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmployeeProfile {
+  id          String      @id @default(cuid())
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime
+  address     String?
+  phoneNumber String?
+  team        Team?       @relation(fields: [teamId], references: [id])
+  teamId      String?
+  user        User        @relation(fields: [userId], references: [id])
+  userId      String      @unique
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Equipment   Equipment[]
+}
+
+model Attendance {
+  id        String    @id @default(cuid())
+  user      User      @relation(fields: [userId], references: [id])
+  userId    String
+  date      DateTime
+  timeIn    DateTime
+  timeOut   DateTime?
+  reason    String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Equipment {
+  id           String           @id @default(cuid())
+  name         String
+  serialNumber String           @unique
+  issuedTo     EmployeeProfile? @relation(fields: [employeeId], references: [id])
+  employeeId   String?
+  issuedAt     DateTime
+  returnedAt   DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Team {
+  id        String            @id @default(cuid())
+  name      String
+  employees EmployeeProfile[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+enum UserRole {
+  EMPLOYEE
+  ADMIN
+  HR
 }

@@ -1,39 +1,77 @@
-import db from "../db";
-import bcrypt from "bcrypt";
+import { PrismaClient, UserRole } from '@prisma/client';
 
-async function seedUsers() {
-  try {
-    await db.user.upsert({
-      where: {
-        id: "1",
-      },
-      create: {
-        id: "1",
-        email: "vaibhav@yopmail.com",
-        name: "Vaibhav Sharma",
-        password: await bcrypt.hash("Staging123$", 10),
-      },
-      update: {},
-    });
+const prisma = new PrismaClient();
 
-  } catch (error) {
-    console.error("Error seeding users:", error);
-    throw error;
-  }
+async function main() {
+  // Create a team
+  const team = await prisma.team.create({
+    data: {
+      name: 'Engineering',
+    },
+  });
+
+  // Create a user
+  const user = await prisma.user.create({
+    data: {
+      name: 'Vaibhav Sharma',
+      email: 'john.doe@example.com',
+      password: 'securepassword', // Remember to hash passwords in a real application
+      role: UserRole.EMPLOYEE,
+    },
+  });
+
+  // Create an employee profile
+  const employeeProfile = await prisma.employeeProfile.create({
+    data: {
+      firstName: 'Vaibhav',
+      lastName: 'Sharma',
+      dateOfBirth: new Date('2000-10-17'),
+      address: '123 Main St',
+      phoneNumber: '7618616236',
+      teamId: team.id,
+      userId: user.id,
+    },
+  });
+
+  // Create an equipment item
+  const equipment = await prisma.equipment.create({
+    data: {
+      name: 'Laptop',
+      serialNumber: 'SN123456789',
+      issuedTo: {
+        connect: {
+          id: employeeProfile.id,
+        },
+      },
+      issuedAt: new Date(),
+    },
+  });
+
+  // Create an attendance record
+  await prisma.attendance.create({
+    data: {
+      userId: user.id,
+      date: new Date(),
+      timeIn: new Date(),
+    },
+  });
+
+  // Create a session
+  await prisma.session.create({
+    data: {
+      sessionToken: 'unique-session-token',
+      userId: user.id,
+      expires: new Date(Date.now() + 3600 * 1000), // 1 hour expiry
+    },
+  });
+
+  console.log('Seed data created');
 }
 
-async function seedDatabase() {
-    try {
-      await seedUsers();
-    } catch (error) {
-      console.error('Error seeding database:', error);
-      throw error;
-    } finally {
-      await db.$disconnect();
-    }
-  }
-  
-  seedDatabase().catch((error) => {
-    console.error('An unexpected error occurred during seeding:', error);
-    process.exit(1);
+main()
+  .catch(e => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
   });

@@ -59,7 +59,12 @@ CREATE TABLE "Attendance" (
 CREATE TABLE "Equipment" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "serialNumber" TEXT NOT NULL,
+    "serviceTag" TEXT NOT NULL,
+    "expressServiceCode" TEXT,
+    "configuration" TEXT,
+    "price" DOUBLE PRECISION NOT NULL,
+    "warrantyTill" TIMESTAMP(3),
+    "manufacturer" TEXT NOT NULL,
     "employeeId" TEXT,
     "issuedAt" TIMESTAMP(3) NOT NULL,
     "returnedAt" TIMESTAMP(3),
@@ -67,6 +72,20 @@ CREATE TABLE "Equipment" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Equipment_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ChequeRecord" (
+    "id" TEXT NOT NULL,
+    "chequeNo" TEXT NOT NULL,
+    "equipmentId" TEXT NOT NULL,
+    "employeeId" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ChequeRecord_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -92,7 +111,10 @@ CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 CREATE UNIQUE INDEX "EmployeeProfile_userId_key" ON "EmployeeProfile"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Equipment_serialNumber_key" ON "Equipment"("serialNumber");
+CREATE UNIQUE INDEX "Equipment_serviceTag_key" ON "Equipment"("serviceTag");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Equipment_expressServiceCode_key" ON "Equipment"("expressServiceCode");
 
 -- AddForeignKey
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -104,7 +126,13 @@ ALTER TABLE "EmployeeProfile" ADD CONSTRAINT "EmployeeProfile_teamId_fkey" FOREI
 ALTER TABLE "EmployeeProfile" ADD CONSTRAINT "EmployeeProfile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Attendance" ADD CONSTRAINT "Attendance_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Attendance" ADD CONSTRAINT "Attendance_userId_fkey" FOREIGN KEY ("userId") REFERENCES "EmployeeProfile"("userId") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Equipment" ADD CONSTRAINT "Equipment_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "EmployeeProfile"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ChequeRecord" ADD CONSTRAINT "ChequeRecord_employeeId_fkey" FOREIGN KEY ("employeeId") REFERENCES "EmployeeProfile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ChequeRecord" ADD CONSTRAINT "ChequeRecord_equipmentId_fkey" FOREIGN KEY ("equipmentId") REFERENCES "Equipment"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

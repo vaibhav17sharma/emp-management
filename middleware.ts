@@ -2,7 +2,13 @@ import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
 export const config = {
-  matcher: ["/employee/:path*", "/admin/:path*", "/landing"],
+  matcher: [
+    "/employee/:path*",
+    "/admin/:path*",
+    "/landing",
+    "/profile",
+    "/setting",
+  ],
 };
 
 export default withAuth(async (req) => {
@@ -11,11 +17,21 @@ export default withAuth(async (req) => {
   const token = req.nextauth.token;
   const url = new URL(req.url);
 
-  if(!token && url.pathname.startsWith('/landing')){
+  if (
+    !token &&
+    (url.pathname.startsWith("/landing") ||
+      url.pathname.startsWith("/profile") ||
+      url.pathname.startsWith("/setting"))
+  ) {
     return NextResponse.redirect(new URL("/signin", req.url));
-  } 
+  }
 
-  if(token && url.pathname.startsWith('/landing')){
+  if (
+    token &&
+    (url.pathname.startsWith("/landing") ||
+      url.pathname.startsWith("/profile") ||
+      url.pathname.startsWith("/setting"))
+  ) {
     return NextResponse.next();
   }
 

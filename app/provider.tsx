@@ -1,12 +1,11 @@
-'use client';
-import { ReactNode } from 'react';
-import { SessionProvider } from 'next-auth/react';
-import { RecoilRoot } from 'recoil';
-import { ThemeProvider } from '@/components/common/ThemeProvider';
+"use client";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
+import { ReactNode } from "react";
+import { RecoilRoot } from "recoil";
 
 export const Providers = ({ children }: { children: ReactNode }) => {
   return (
-    <SessionProvider>
+    <>
       <ThemeProvider
         attribute="class"
         defaultTheme="dark"
@@ -15,6 +14,6 @@ export const Providers = ({ children }: { children: ReactNode }) => {
       >
         <RecoilRoot>{children}</RecoilRoot>
       </ThemeProvider>
-    </SessionProvider>
+    </>
   );
 };

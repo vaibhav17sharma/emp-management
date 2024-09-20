@@ -8,12 +8,10 @@ const getUserDetails = async () => {
 export default async function Dashboard() {
   const session = await getUserDetails();
   return (
-    <div className="break-words">
-      <p className="text-lg font-medium">
-        <span className="font-bold">Hi</span> {session?.user?.name}
-      </p>
-      <h1>Dashboard</h1>
-      <p>User Details: {JSON.stringify(session, null, 2)}</p>
-    </div>
+    <>
+      <span className="break-words">
+        {JSON.stringify(session, null, 2)}
+      </span>
+    </>
   );
 }

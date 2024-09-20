@@ -59,7 +59,7 @@ export const authOptions = {
               token: await generateJWT({
                 id: "1",
               }),
-              role: 'EMPLOYEE',
+              role: 'ADMIN',
             };
           }
           const userDb = await db.user.findFirst({

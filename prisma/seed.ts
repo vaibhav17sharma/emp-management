@@ -6,7 +6,7 @@ async function main() {
   // Create a team
   const team = await prisma.team.create({
     data: {
-      name: 'Engineering',
+      name: 'MIL',
     },
   });
 
@@ -14,8 +14,8 @@ async function main() {
   const user = await prisma.user.create({
     data: {
       name: 'Vaibhav Sharma',
-      email: 'john.doe@example.com',
-      password: 'securepassword', // Remember to hash passwords in a real application
+      email: 'vaibhav@yopmail.com',
+      password: '$2a$10$0nBVGOQB4kaCH/F9VMqfeuwih5A4gQKJic8xD3mkTCHiTxdw1J0J6',
       role: UserRole.EMPLOYEE,
     },
   });
@@ -27,7 +27,7 @@ async function main() {
       lastName: 'Sharma',
       dateOfBirth: new Date('2000-10-17'),
       address: '123 Main St',
-      phoneNumber: '7618616236',
+      phoneNumber: 'xxxxxxxxxx',
       teamId: team.id,
       userId: user.id,
     },
@@ -36,8 +36,13 @@ async function main() {
   // Create an equipment item
   const equipment = await prisma.equipment.create({
     data: {
-      name: 'Laptop',
-      serialNumber: 'SN123456789',
+      name: 'Latitude 3420',
+      serviceTag: 'xxxxxxx',
+      expressServiceCode: 'xxxxxxxxxxxx',
+      manufacturer: 'Dell',
+      configuration: 'i7 11th Gen, 16GB RAM, 500GB SSD, Windows 10',
+      warrantyTill: new Date('2026-05-19'),
+      price: 1000,
       issuedTo: {
         connect: {
           id: employeeProfile.id,
@@ -53,15 +58,6 @@ async function main() {
       userId: user.id,
       date: new Date(),
       timeIn: new Date(),
-    },
-  });
-
-  // Create a session
-  await prisma.session.create({
-    data: {
-      sessionToken: 'unique-session-token',
-      userId: user.id,
-      expires: new Date(Date.now() + 3600 * 1000), // 1 hour expiry
     },
   });
 

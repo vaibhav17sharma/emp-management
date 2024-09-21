@@ -1,18 +1,30 @@
 import { z } from "zod";
 const UserRole = z.enum(["EMPLOYEE", "ADMIN", "MANAGER"]);
 
-const employeeSchema = z.object({
-  firstName: z.string().min(1).max(100),
-  lastName: z.string().min(1).max(100),
-  dateOfBirth: z.date().max(new Date()),
+
+export const employeeSchema = z.object({
+  firstName: z.string().min(1).max(100, {
+    message: "First name must be between 1 and 100 characters.",
+  }),
+  lastName: z.string().min(1).max(100, {
+    message: "Last name must be between 1 and 100 characters.",
+  }),
+  dateOfBirth: z.date().max(new Date(), {
+    message: "Date of birth cannot be in the future.",
+  }),
   address: z.string().max(255).optional(),
   phoneNumber: z
     .string()
-    .regex(/^[0-9]{10}$/)
+    .regex(/^[0-9]{10}$/, {
+      message: "Phone number must be 10 digits.",
+    })
     .optional(),
-  userId: z.string(),
+  email: z.string().email(),
   teamId: z.string().optional(),
+  password: z.string().min(6),
 });
+
+export type EmployeeFormData = z.infer<typeof employeeSchema>;
 
 const userSchema = z.object({
   name: z.string().optional(),

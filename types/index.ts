@@ -7,8 +7,7 @@ export interface EmployeeProfileResponse {
   dateOfBirth?: Date;
   address?: string;
   phoneNumber?: string;
-  team: Team | null;
-  teamId?: string;
+  teams: Team[] | null;
   user?: User;
   userId?: string;
   createdAt?: Date;

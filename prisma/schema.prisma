@@ -38,8 +38,7 @@ model EmployeeProfile {
   address     String?
   phoneNumber String?
   attendance  Attendance[]
-  team        Team?          @relation(fields: [teamId], references: [id])
-  teamId      String?
+  teams       Team[]         @relation("EmployeeTeams")
   user        User           @relation(fields: [userId], references: [id])
   userId      String         @unique
   createdAt   DateTime       @default(now())
@@ -94,7 +93,7 @@ model ChequeRecord {
 model Team {
   id        String            @id @default(cuid())
   name      String
-  employees EmployeeProfile[]
+  employees EmployeeProfile[] @relation("EmployeeTeams")
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
 }

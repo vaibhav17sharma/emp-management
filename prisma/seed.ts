@@ -6,7 +6,7 @@ async function main() {
   // Create a team
   const team = await prisma.team.create({
     data: {
-      name: 'MIL',
+      name: 'Novoinvent',
     },
   });
 
@@ -28,7 +28,11 @@ async function main() {
       dateOfBirth: new Date('2000-10-17'),
       address: '123 Main St',
       phoneNumber: 'xxxxxxxxxx',
-      teamId: team.id,
+      teams: {
+        connect: {
+          id: team.id,
+        },
+      },
       userId: user.id,
     },
   });

@@ -1,18 +1,63 @@
+"use server";
 import db from "@/db";
 import { cache } from "@/db/Cache";
 import { EmployeeProfileResponse } from "@/types";
 import { EmployeeProfile } from "@prisma/client";
+import bcrypt from "bcrypt";
 
+export async function addEmployeeProfile(
+  employeeProfile: any
+): Promise<EmployeeProfile> {
+  const {
+    firstName,
+    lastName,
+    name,
+    email,
+    password,
+    dateOfBirth,
+    address,
+    phoneNumber,
+    teamId,
+  } = employeeProfile;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const transaction = await db.$transaction(async (prisma) => {
+      const newUser = await prisma.user.create({
+        data: {
+          name: name,
+          email: email,
+          password: hashedPassword,
+        },
+      });
 
-export async function addEmployeeProfile(employeeProfile: any): Promise<EmployeeProfile> {
-  const newEmployeeProfile = await db.employeeProfile.create({
-    data: employeeProfile,
-  });
+      const newEmployeeProfile = await prisma.employeeProfile.create({
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+          dateOfBirth: dateOfBirth,
+          address: address,
+          phoneNumber: phoneNumber,
+          userId: newUser.id,
+          teams: {
+            connect: {
+              id: teamId,
+            },
+          },
+        },
+      });
 
-  return newEmployeeProfile;
+      return { newUser, newEmployeeProfile };
+    });
+    return transaction.newEmployeeProfile;
+  } catch (error) {
+    throw new Error(error as string);
+  }
 }
 
-export async function updateEmployeeProfile(id: string, employeeProfile: any): Promise<EmployeeProfile> {
+export async function updateEmployeeProfile(
+  id: string,
+  employeeProfile: any
+): Promise<EmployeeProfile> {
   const updatedEmployeeProfile = await db.employeeProfile.update({
     where: {
       id: id,
@@ -23,7 +68,9 @@ export async function updateEmployeeProfile(id: string, employeeProfile: any): P
   return updatedEmployeeProfile;
 }
 
-export async function deleteEmployeeProfile(id: string) : Promise<EmployeeProfile> {
+export async function deleteEmployeeProfile(
+  id: string
+): Promise<EmployeeProfile> {
   const deletedEmployeeProfile = await db.employeeProfile.delete({
     where: {
       id: id,
@@ -33,8 +80,8 @@ export async function deleteEmployeeProfile(id: string) : Promise<EmployeeProfil
   return deletedEmployeeProfile;
 }
 
-export async function getAllEmployeeProfiles({ noCache = false } = {}) {
-  if (noCache) {
+export async function getAllEmployeeProfiles({ freshData = false } = {}) {
+  if (freshData) {
     const employeeProfiles = await db.employeeProfile.findMany({
       orderBy: {
         id: "desc",
@@ -43,7 +90,7 @@ export async function getAllEmployeeProfiles({ noCache = false } = {}) {
         id: true,
         firstName: true,
         lastName: true,
-        team: true,
+        teams: true,
         user: true,
         Equipment: true,
       },
@@ -65,7 +112,7 @@ export async function getAllEmployeeProfiles({ noCache = false } = {}) {
       id: true,
       firstName: true,
       lastName: true,
-      team: true,
+      teams: true,
       user: true,
       Equipment: true,
     },
@@ -75,7 +122,9 @@ export async function getAllEmployeeProfiles({ noCache = false } = {}) {
   return employeeProfiles;
 }
 
-export async function getEmployeeProfileById(id: string): Promise<EmployeeProfile> {
+export async function getEmployeeProfileById(
+  id: string
+): Promise<EmployeeProfile> {
   const employeeProfile = await db.employeeProfile.findUnique({
     where: {
       id: id,
@@ -87,7 +136,9 @@ export async function getEmployeeProfileById(id: string): Promise<EmployeeProfil
   return employeeProfile;
 }
 
-export async function getEmployeeProfileByUserId(userId: string): Promise<EmployeeProfileResponse> {
+export async function getEmployeeProfileByUserId(
+  userId: string
+): Promise<EmployeeProfileResponse> {
   const employeeProfile = await db.employeeProfile.findFirst({
     where: {
       userId: userId,
@@ -96,7 +147,7 @@ export async function getEmployeeProfileByUserId(userId: string): Promise<Employ
       id: true,
       firstName: true,
       lastName: true,
-      team: true,
+      teams: true,
       Equipment: true,
     },
   });

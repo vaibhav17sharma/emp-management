@@ -10,7 +10,6 @@ interface Profile {
   dateOfBirth: Date;
   address: string | null;
   phoneNumber: string | null;
-  teamId: string | null;
   userId: string;
   createdAt: Date;
   updatedAt: Date;

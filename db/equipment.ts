@@ -30,17 +30,7 @@ export async function deleteEquipment(id: string) {
   return deletedEquipment;
 }
 
-export async function getAllEquipments(noCache = false) {
-  if (noCache) {
-    const allEquipments = await db.equipment.findMany({
-      orderBy: {
-        id: "desc",
-      },
-    });
-    await cache.set("getAllEquipments", [], allEquipments);
-    return allEquipments;
-  }
-
+export async function getAllEquipments() {
   const cachedValue = await cache.get("getAllEquipments", []);
   if (cachedValue) {
     return cachedValue;
@@ -56,20 +46,7 @@ export async function getAllEquipments(noCache = false) {
   return allEquipments;
 }
 
-export async function getUnallotedEquipments(noCache = false) {
-  if (noCache) {
-    const unallocatedEquipments = await db.equipment.findMany({
-      where: {
-        employeeId: null,
-      },
-      orderBy: {
-        id: "desc",
-      },
-    });
-    await cache.set("getUnallotedEquipments", [], unallocatedEquipments);
-    return unallocatedEquipments;
-  }
-
+export async function getUnallotedEquipments() {
   const cachedValue = await cache.get("getUnallotedEquipments", []);
   if (cachedValue) {
     return cachedValue;

@@ -1,6 +1,6 @@
-import { ICache } from '@/lib/cache/cache';
-import { InMemoryCache } from '@/lib/cache/in-memory-cache';
-import { RedisCache } from '@/lib/cache/redis-cache';
+import { ICache } from "@/lib/cache/cache";
+import { InMemoryCache } from "@/lib/cache/in-memory-cache";
+// import { RedisCache } from '@/lib/cache/redis-cache';
 
 const redisUrl = process.env.REDIS_URL;
 
@@ -9,11 +9,7 @@ export class Cache implements ICache {
   private delegate: ICache;
 
   private constructor() {
-    if (redisUrl) {
-      this.delegate = RedisCache.getInstance(redisUrl);
-    } else {
-      this.delegate = InMemoryCache.getInstance();
-    }
+    this.delegate = InMemoryCache.getInstance();
   }
 
   static getInstance(): Cache {
@@ -27,7 +23,7 @@ export class Cache implements ICache {
     type: string,
     args: string[],
     value: any,
-    expirySeconds: number = parseInt(process.env.CACHE_EXPIRE_S || '100', 10),
+    expirySeconds: number = parseInt(process.env.CACHE_EXPIRE_S || "100", 10)
   ): Promise<void> {
     return this.delegate.set(type, args, value, expirySeconds);
   }

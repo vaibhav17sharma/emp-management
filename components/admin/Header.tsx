@@ -2,8 +2,8 @@ import { authOptions } from "@/lib/auth";
 import {
   ChartBar,
   Home,
+  Laptop,
   LineChart,
-  Package,
   Package2,
   PanelLeft,
   Search,
@@ -60,7 +60,7 @@ export default async function Header() {
               href="/admin/equipments"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
             >
-              <Package className="h-5 w-5" />
+              <Laptop className="h-5 w-5" />
               Assets
             </a>
             <a

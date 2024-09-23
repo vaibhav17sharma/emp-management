@@ -22,3 +22,13 @@ export function formatDate(date: Date): string {
   };
   return new Intl.DateTimeFormat('en-US', options).format(date);
 }
+
+export function generateTempPassword(length = 12) {
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$";
+  let tempPassword = "";
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      tempPassword += charset[randomIndex];
+  }
+  return tempPassword;
+}

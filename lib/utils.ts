@@ -14,13 +14,29 @@ export function shuffleArray<T>(array: T[]): T[] {
   return shuffledArray;
 }
 
-export function formatDate(date: Date): string {
-  const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-  };
-  return new Intl.DateTimeFormat('en-US', options).format(date);
+export function formatDate(date: Date, type: "date" | "time" = "date", variant : "short" | "long" = "long") {
+  if (type === "date") {
+    if(variant === "short") {
+      const options: Intl.DateTimeFormatOptions = {
+          month: 'short',
+          day: 'numeric',
+      };
+      return new Intl.DateTimeFormat('en-US', options).format(date);
+    } else {
+      const options: Intl.DateTimeFormatOptions = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+      };
+      return new Intl.DateTimeFormat('en-US', options).format(date);
+    }
+  } else {
+    const options: Intl.DateTimeFormatOptions = {
+        hour: 'numeric',
+        minute: 'numeric',
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(date);
+  }
 }
 
 export function generateTempPassword(length = 12) {

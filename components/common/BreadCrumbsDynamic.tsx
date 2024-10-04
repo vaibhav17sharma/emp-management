@@ -2,21 +2,29 @@
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "../ui/breadcrumb";
 
-const BreadcrumbsDynamic = ({ home, url }: { home: string; url: string }) => {
+const BreadcrumbsDynamic = ({
+  home,
+  url,
+  type,
+}: {
+  home: string;
+  url: string;
+  type: string;
+}) => {
   const pathname = usePathname();
 
   usePathname();
 
   const getBreadcrumbItems = () => {
-    const pathSegments = pathname.split("/admin/").filter(Boolean);
+    const pathSegments = pathname.split(`/${type}/`).filter(Boolean);
 
     return pathSegments.map((segment, index) => {
       const href = "/" + pathSegments.slice(0, index + 1).join("/");
